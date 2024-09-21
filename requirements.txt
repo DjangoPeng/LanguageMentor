@@ -1,0 +1,7 @@
+langchain==0.2.16
+langchain_core==0.2.41
+langchain_community==0.2.17
+langchain_openai==0.1.25
+langchain_ollama==0.1.3
+gradio==4.43.0
+loguru==0.7.2
