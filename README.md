@@ -1,6 +1,7 @@
 # LanguageMentor
 
-LanguageMentor 是一款基于 LLaMA 3 的在线英语私人教师 Agent，提供词汇积累、语法学习、阅读理解和写作训练等基础教学功能，以及模拟真实场景的对话训练。通过个性化定制学习路径，满足初学者、中级和高级学员的需求，为用户提供高效、便捷的语言学习体验，极大提高英语学习效率。
+LanguageMentor 是一款基于 LLaMA 3.1 或 GPT-4o-mini 的在线英语私教系统，提供英语对话练习和场景化学习训练。用户可以选择不同的场景，或直接与对话代理人进行自由对话，模拟真实生活中的英语交流场景，提升语言能力。
+
 
 ## 产品设计
 
@@ -22,27 +23,44 @@ LanguageMentor 是一款基于 LLaMA 3 的在线英语私人教师 Agent，提�
 
 1. **克隆仓库**
    ```bash
-   git clone https://github.com/yourusername/LanguageMentor.git
+   git clone https://github.comDjangoPeng/LanguageMentor.git
    cd LanguageMentor
    ```
 
-2. **安装依赖**
-   确保你已经安装了 Python 3.8 及以上版本，然后运行以下命令安装所需依赖：
+2. **创建 Python 虚拟环境**
+   使用 miniconda 或类似 Python 虚拟环境管理工具，创建一个项目专属的环境，取名为`lm`：
+   ```bash
+   conda create -n lm python=3.10
+   ```
+   激活虚拟环境
+   ```bash
+   conda activate lm
+   ```
+
+3. **配置开发环境**
+   然后运行以下命令安装所需依赖：
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **配置环境**
-   根据需要配置你的环境变量，例如 API 密钥等。你可以在 `.env.example` 文件中找到示例配置。
+   根据需要配置你的环境变量，例如 `OpenAI_API_KEY` 等。
 
 4. **运行应用**
    启动应用程序：
    ```bash
-   python app.py
+   python src/main.py
    ```
 
-5. **开始使用**
-   打开浏览器，访问 `http://localhost:8000`，开始体验 LanguageMentor 的强大功能。
+5. **开始体验**
+   打开浏览器，访问 `http://localhost:7860`，开始跟着 LanguageMentor 一起学习英语！
+
+   运行画面：
+   ![gradio_demo](images/gradio.png)
+
+   对话练习：
+   ![gradio_demo_0](images/gradio_0.png)
+   ![gradio_demo_1](images/gradio_1.png)
+
 
 ## 贡献
 欢迎对本项目做出贡献！你可以通过以下方式参与：
@@ -51,11 +69,10 @@ LanguageMentor 是一款基于 LLaMA 3 的在线英语私人教师 Agent，提�
 - 参与讨论和提供反馈
 
 ## 许可证
-本项目采用 MIT 许可证，详情请参阅 `LICENSE` 文件。
+本项目采用 Apache 2.0 许可证，详情请参阅 [LICENSE](LICENSE) 文件。
 
 ## 联系我们
-如果你有任何问题或建议，请通过以下方式联系我们：
-- 电子邮件: support@languagementor.com
-- GitHub Issues: https://github.com/yourusername/LanguageMentor/issues
 
-感谢你对 LanguageMentor 的关注和支持！
+如果你有任何问题或建议，请通过以下方式联系我：
+- Email: pjt73651@gmail.com
+- GitHub Issues: https://github.com/comDjangoPeng/LanguageMentor/issues
