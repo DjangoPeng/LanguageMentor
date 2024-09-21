@@ -55,10 +55,11 @@ LanguageMentor 是一款基于 LLaMA 3.1 或 GPT-4o-mini 的在线英语私教�
    打开浏览器，访问 `http://localhost:7860`，开始跟着 LanguageMentor 一起学习英语！
 
    运行画面：
-   ![gradio_demo](images/gradio_demo.png)
+   ![gradio_demo](images/gradio.png)
 
    对话练习：
-   ![gradio_demo_0](images/gradio_demo_0.png)
+   ![gradio_demo_0](images/gradio_0.png)
+   ![gradio_demo_1](images/gradio_1.png)
 
 
 ## 贡献
