@@ -1,7 +1,8 @@
 
 from langchain_ollama.chat_models import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import HumanMessage
+from utils.logger import LOG
 
 
 class ConversationAgent:
@@ -21,6 +22,6 @@ class ConversationAgent:
             temperature=1.2,
         )
 
-    def respond(self, user_input):
-        message = self.chatbot.invoke({"messages": [HumanMessage(content=user_input)]})
-        return message.content
+    def chat(self, user_input):
+        result = self.chatbot.invoke([HumanMessage(content=user_input)])
+        return result.content
