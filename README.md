@@ -23,7 +23,7 @@ LanguageMentor 是一款基于 LLaMA 3.1 或 GPT-4o-mini 的在线英语私教�
 
 1. **克隆仓库**
    ```bash
-   git clone https://github.comDjangoPeng/LanguageMentor.git
+   git clone https://github.com/DjangoPeng/LanguageMentor.git
    cd LanguageMentor
    ```
 
@@ -75,4 +75,4 @@ LanguageMentor 是一款基于 LLaMA 3.1 或 GPT-4o-mini 的在线英语私教�
 
 如果你有任何问题或建议，请通过以下方式联系我：
 - Email: pjt73651@gmail.com
-- GitHub Issues: https://github.com/comDjangoPeng/LanguageMentor/issues
+- GitHub Issues: https://github.com/DjangoPeng/LanguageMentor/issues
