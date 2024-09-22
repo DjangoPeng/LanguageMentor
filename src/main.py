@@ -17,7 +17,7 @@ renting_agent = RentingAgent()
 # 对话 Agent 处理函数
 def handle_conversation(user_input, chat_history):
     LOG.debug(f"[聊天记录]: {chat_history}")
-    # bot_message = conversation_agent.chat(user_input, chat_history)
+    # bot_message = conversation_agent.chat(user_input)
     bot_message = conversation_agent.chat_with_history(user_input)
     LOG.info(f"[ChatBot]: {bot_message}")
     return bot_message
