@@ -18,6 +18,13 @@ LanguageMentor 是一款基于 LLaMA 3.1 或 GPT-4o-mini 的在线英语私教�
   - 阅读理解：提供不同难度的阅读材料，训练学生的阅读速度和理解能力。
   - 写作技巧：指导学生如何进行段落和文章的结构化写作。
 
+## 产品演示
+
+[![LanguageMentor Demo v0.2](images/gradio.png)](https://youtu.be/5Tb248FSJ8Q)
+
+
+
+
 ## 快速开始
 以下是快速开始使用 LanguageMentor 的步骤：
 
