@@ -20,9 +20,7 @@ LanguageMentor 是一款基于 LLaMA 3.1 或 GPT-4o-mini 的在线英语私教�
 
 ## 产品演示
 
-[![LanguageMentor Demo v0.2](images/gradio.png)](https://youtu.be/5Tb248FSJ8Q)
-
-
+https://github.com/user-attachments/assets/6298a8e4-28fc-4a60-badc-59bff16b315e
 
 
 ## 快速开始
