@@ -16,23 +16,27 @@ renting_agent = RentingAgent()
 
 # 对话 Agent 处理函数
 def handle_conversation(user_input, chat_history):
-    LOG.debug(f"[聊天记录]: {chat_history}")
-    # bot_message = conversation_agent.chat(user_input)
     bot_message = conversation_agent.chat_with_history(user_input)
     LOG.info(f"[ChatBot]: {bot_message}")
     return bot_message
 
 
+def get_scenario_intro(scenario):
+    with open(f"content/{scenario}_page.md", "r") as file:
+        scenario_intro = file.read().strip()
+    return scenario_intro
 
 # 场景 Agent 处理函数，根据选择的场景调用相应的 Agent
-def handle_scenario(user_input, history, scenario):
+def handle_scenario(user_input, chat_history, scenario):
     agents = {
-        "求职面试": job_interview_agent,
-        "酒店入住": hotel_checkin_agent,
-        "薪资谈判": salary_negotiation_agent,
-        "租房": renting_agent
+        "job_interview": job_interview_agent,
+        "hotel_checkin": hotel_checkin_agent,
+        "salary_negotiation": salary_negotiation_agent,
+        "renting": renting_agent
     }
-    return agents[scenario].respond(user_input)
+    bot_message = agents[scenario].chat_with_history(user_input)
+    LOG.info(f"[ChatBot]: {bot_message}")
+    return bot_message
 
 # Gradio 界面
 with gr.Blocks(title="LanguageMentor 英语私教") as language_mentor_app:
@@ -53,18 +57,33 @@ with gr.Blocks(title="LanguageMentor 英语私教") as language_mentor_app:
         )
 
     with gr.Tab("场景训练"):
-        gr.Markdown("## 选择一个场景学习并完成任务")
-        scenario_dropdown = gr.Dropdown(choices=["求职面试", "酒店入住", "薪资谈判", "租房"], label="选择场景")
+        gr.Markdown("## 选择一个场景完成目标和挑战")
+
+        # 创建 Radio 组件
+        scenario = gr.Radio(
+            choices=[
+                ("求职面试", "job_interview"),
+                ("酒店入住", "hotel_checkin"),
+                ("薪资谈判", "salary_negotiation"),
+                ("租房", "renting")
+            ], 
+            value="job_interview",
+            label="场景")
+
+        scenario_intro = gr.Markdown()
+        
+        scenario.change(fn=get_scenario_intro, inputs=scenario, outputs=scenario_intro)
+
         scenario_chatbot = gr.Chatbot(
             placeholder="<strong>你的英语私教 DjangoPeng</strong><br><br>选择场景后开始对话吧！",
-            height=800,
+            height=600,
         )
-        
+
         # 场景聊天界面
         gr.ChatInterface(
             fn=handle_scenario,
             chatbot=scenario_chatbot,
-            additional_inputs=scenario_dropdown,
+            additional_inputs=scenario,
             retry_btn=None,
             undo_btn=None,
             clear_btn="清除历史记录",
