@@ -67,7 +67,6 @@ with gr.Blocks(title="LanguageMentor 英语私教") as language_mentor_app:
                 ("薪资谈判", "salary_negotiation"),
                 ("租房", "renting")
             ], 
-            value="job_interview",
             label="场景")
 
         scenario_intro = gr.Markdown()

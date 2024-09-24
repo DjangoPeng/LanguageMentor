@@ -1,6 +1,5 @@
 **目标:**
-- 完成酒店入住流程并询问酒店的设施  
-Complete the hotel check-in process and ask about the hotel's amenities.
+- 完成酒店入住流程并询问酒店的设施（Complete the hotel check-in process and ask about the hotel's amenities）
 
 **挑战:**
 1. 提供你的预订信息并进行身份验证  
