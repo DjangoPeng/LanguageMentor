@@ -1,91 +1,88 @@
-# 导入所需的模块和类
+import json
+import random
+
 from langchain_ollama.chat_models import ChatOllama  # 导入 ChatOllama 模型
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder  # 导入提示模板相关类
-from langchain_core.messages import HumanMessage  # 导入人类消息类
-from utils.logger import LOG  # 导入日志工具
-
-from langchain_core.chat_history import (
-    BaseChatMessageHistory,  # 基础聊天消息历史类
-    InMemoryChatMessageHistory,  # 内存中的聊天消息历史类
-)
+from langchain_core.messages import HumanMessage, AIMessage  # 导入人类消息和 AI 消息类
 from langchain_core.runnables.history import RunnableWithMessageHistory  # 导入带有消息历史的可运行类
 
-# 用于存储会话历史的字典
-store = {}
-
-def get_session_history(session_id: str) -> BaseChatMessageHistory:
-    """
-    获取指定会话ID的聊天历史。如果该会话ID不存在，则创建一个新的聊天历史实例。
-    
-    参数:
-        session_id (str): 会话的唯一标识符
-    
-    返回:
-        BaseChatMessageHistory: 对应会话的聊天历史对象
-    """
-    if session_id not in store:
-        # 如果会话ID不存在于存储中，创建一个新的内存聊天历史实例
-        store[session_id] = InMemoryChatMessageHistory()
-    return store[session_id]
+from .session_history import get_session_history  # 导入会话历史相关方法
+from utils.logger import LOG  # 导入日志工具
 
 class ConversationAgent:
     """
     对话代理类，负责处理与用户的对话。
     """
-    def __init__(self):
-        self.name = "Conversation Agent"  # 代理名称
-        
-        # 读取系统提示语，从文件中加载
-        with open("prompts/conversation_prompt.txt", "r", encoding="utf-8") as file:
-            self.system_prompt = file.read().strip()
+    def __init__(self, session_id=None):
+        self.name = "conversation"  # 设置代理名称为 "conversation"
+        self.session_id = session_id if session_id else self.name  # 如果未提供会话ID，则使用代理名称作为会话ID
+        self.prompt_file = "prompts/conversation_prompt.txt"  # 系统提示语文件路径
+        self.prompt = self.load_prompt()  # 加载系统提示语
 
+        self.create_chatbot()  # 创建聊天机器人
+
+    def load_prompt(self):
+        """
+        加载系统提示语。
+        """
+        try:
+            with open(self.prompt_file, "r", encoding="utf-8") as file:
+                return file.read().strip()  # 读取文件并去除首尾空格
+        except FileNotFoundError:
+            raise FileNotFoundError(f"找不到提示文件 {self.prompt_file}!")
+
+    def create_chatbot(self):
+        """
+        初始化聊天机器人，包含系统提示和消息历史记录。
+        """
         # 创建聊天提示模板，包括系统提示和消息占位符
-        self.prompt = ChatPromptTemplate.from_messages([
-            ("system", self.system_prompt),  # 系统提示部分
+        system_prompt = ChatPromptTemplate.from_messages([
+            ("system", self.prompt),  # 系统提示部分
             MessagesPlaceholder(variable_name="messages"),  # 消息占位符
         ])
 
-        # 初始化 ChatOllama 模型，配置模型参数
-        self.chatbot = self.prompt | ChatOllama(
+        # 初始化 ChatOllama 模型，配置参数
+        self.chatbot = system_prompt | ChatOllama(
             model="llama3.1:8b-instruct-q8_0",  # 使用的模型名称
-            max_tokens=8192,  # 最大生成的token数
-            temperature=0.8,  # 生成文本的随机性
+            max_tokens=8192,  # 最大生成的 token 数
+            temperature=0.8,  # 随机性配置
         )
 
-        # 将聊天机器人与消息历史记录关联起来
+        # 将聊天机器人与消息历史记录关联
         self.chatbot_with_history = RunnableWithMessageHistory(self.chatbot, get_session_history)
 
-        # 配置字典，包含会话ID等可配置参数
-        self.config = {"configurable": {"session_id": "abc123"}}
 
-    def chat(self, user_input):
+    def start_new_session(self):
         """
-        处理用户输入并生成回复。
-        
-        参数:
-            user_input (str): 用户输入的消息
-        
-        返回:
-            str: 代理生成的回复内容
+        开始一个新的聊天会话，发送初始的 AI 消息。
         """
-        response = self.chatbot.invoke(
-            [HumanMessage(content=user_input)],  # 将用户输入封装为 HumanMessage
-        )  
-        return response.content  # 返回生成的回复内容
+        # 获取当前会话的历史记录
+        history = get_session_history(self.session_id)
+        LOG.debug(f"[history]:{history}")
+
+        # 如果历史记录为空，则发送初始 AI 消息
+        if not history.messages:
+            initial_ai_message = "欢迎！今天有什么我能帮忙的吗？"  # 初始消息
+            history.add_message(AIMessage(content=initial_ai_message))  # 将初始消息添加到历史记录
+            return initial_ai_message
+        else:
+            return history.messages[-1].content  # 返回历史记录中的最后一条消息
 
     def chat_with_history(self, user_input):
         """
-        处理用户输入并生成包含聊天历史的回复，同时记录日志。
+        处理用户输入，生成包含聊天历史的回复。
         
         参数:
             user_input (str): 用户输入的消息
         
         返回:
-            str: 代理生成的回复内容
+            str: AI 生成的回复
         """
+        # 生成回复并考虑消息历史
         response = self.chatbot_with_history.invoke(
             [HumanMessage(content=user_input)],  # 将用户输入封装为 HumanMessage
-            self.config,  # 传入配置，包括会话ID
+            {"configurable": {"session_id": self.session_id}},  # 传入配置，包括会话ID
         )
+        
         LOG.debug(response)  # 记录调试日志
         return response.content  # 返回生成的回复内容
