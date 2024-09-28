@@ -2,7 +2,6 @@ from langchain_core.chat_history import (
     BaseChatMessageHistory,  # 基础聊天消息历史类
     InMemoryChatMessageHistory,  # 内存中的聊天消息历史类
 )
-from langchain_core.runnables.history import RunnableWithMessageHistory  # 导入带有消息历史的可运行类
 
 
 # 用于存储会话历史的字典
